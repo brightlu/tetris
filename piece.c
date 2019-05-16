@@ -7,8 +7,8 @@ piece *move_piece_down(piece *pi){
 	if (trans->ypos < 0) {
 	  return trans;
 	} else { 
-	  trans->xpos = pi->xpos;
+	  trans->xpos = pi->xpos + 1;
 	  trans->type = pi->type;
-	  trans->ypos = pi->ypos - 1;
+	  trans->ypos = pi->ypos;
 	}
 }
