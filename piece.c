@@ -4,10 +4,11 @@
 
 piece *move_piece_down(piece *pi){
 	piece *trans;
-	trans->xpos = pi->xpos;
-	trans->type = pi->type;
-	trans->ypos = pi->ypos - 1;
-
-	return trans;
-
+	if (trans->ypos < 0) {
+	  return trans;
+	} else { 
+	  trans->xpos = pi->xpos;
+	  trans->type = pi->type;
+	  trans->ypos = pi->ypos - 1;
+	}
 }
