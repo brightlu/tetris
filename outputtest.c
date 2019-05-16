@@ -1,8 +1,8 @@
-#include "framebuffer.h"
 #include "sense.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "piece.h"
 
 void display_dot(pi_framebuffer_t *dev, int x, int y) {
   uint16_t red = getColor(255, 0, 0);
@@ -36,19 +36,4 @@ void display_r_piece(pi_framebuffer_t *dev, int x, int y) {
   dev->bitmap->pixel[y][x-1]=orange;
   dev->bitmap->pixel[y+1][x-1]=orange;
   dev->bitmap->pixel[y-1][x]=orange;
-}
-
-int main(void) {
-  pi_framebuffer_t *dev = getFBDevice();
-  char input;
-  while (!input) {
-    display_dot(dev, 1, 1);
-    display_two_dot(dev, 3, 1);
-    display_three_dot(dev, 3, 2);
-    display_z_piece(dev, 6, 6);
-    display_r_piece(dev, 6, 1);
-    scanf("%c", &input);
-  }
-  clearBitmap(dev->bitmap, 0);
-  return 0;
 }
