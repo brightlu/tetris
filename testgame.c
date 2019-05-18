@@ -1,5 +1,5 @@
 #include "sense.h"
-0;136;0c#include <string.h>
+#include <string.h>
 #include <stdlib.h>
 #include "piece.h"
 #include "outputtest.h"
@@ -32,7 +32,7 @@ void callbackFunc(unsigned int code) {
       printf("quit");
       running=0;
       free(first);
-      free(second);
+      //free(second);
     }
     printf("\n");
 }
@@ -79,7 +79,7 @@ int main(void) {
 	
 	while (1) {
 	  draw_piece(first, dev);
-	  draw_piece(second, dev);
+	  //draw_piece(second, dev);
 	  pollJoystick(joystick, callbackFunc, 1000);
 	  printf("%i\n", first->xpos);
 	  if (first->xpos >= 7) {
