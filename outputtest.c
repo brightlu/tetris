@@ -11,15 +11,15 @@ void display_dot(pi_framebuffer_t *dev, int x, int y) {
 
 void display_two_dot(pi_framebuffer_t *dev, int x, int y) {
   uint16_t green = getColor(0, 255, 0);
-  dev->bitmap->pixel[y][x]=green;
-  dev->bitmap->pixel[y][x+1]=green;
+  dev->bitmap->pixel[x][y]=green;
+  dev->bitmap->pixel[x][y+1]=green;
 }
 
 void display_three_dot(pi_framebuffer_t *dev, int x, int y) {
   uint16_t blue = getColor(0, 0, 255);
-  dev->bitmap->pixel[y][x]=blue;
-  dev->bitmap->pixel[y][x-1]=blue;
-  dev->bitmap->pixel[y][x+1]=blue;
+  dev->bitmap->pixel[x][y]=blue;
+  dev->bitmap->pixel[x][y+1]=blue;
+  dev->bitmap->pixel[x][y+2]=blue;
 }
 
 void display_z_piece(pi_framebuffer_t *dev, int x, int y) {
