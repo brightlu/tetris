@@ -9,6 +9,8 @@
 int running=1;
 pi_i2c_t* gyro=NULL;
 int pressed = 0;
+int right = 0;
+int left = 0;
 
 piece *first = NULL;
 
@@ -21,9 +23,10 @@ void callbackFunc(unsigned int code) {
       printf("move piece down");
     }else if(code == KEY_RIGHT) {
       printf("move piece right");
-      //pressed = 1;
+      right = 1;
     }else if(code == KEY_LEFT) {
       printf("move piece left");
+      left = 1;
     }else if(code == KEY_ENTER) {
       printf("quit");
       running=0;
@@ -71,10 +74,17 @@ int main(void) {
 	  if (first->xpos >= 7) {
 	    first->xpos = 7;
 	    break;
-	  }
-	  else {
+	  } else if (right) {
+	    first = move_piece_right(first);
+	    right = 0;
+	    clearBitmap(dev->bitmap, 0);
+	  } else if (left) {
+	    first = move_piece_left(first);
+	    left = 0;
+	    clearBitmap(dev->bitmap, 0);
+	  } else {
 	    first = move_piece_down(first);
-	    delay(10000);
+	    delay(1000);
 	    clearBitmap(dev->bitmap, 0);
 	  }
         }
