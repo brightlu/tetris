@@ -1,0 +1,12 @@
+#include "framebuffer.h"
+#include "sense.h"
+#include <stdio.h>
+
+void display_dot(pi_framebuffer_t *dev) {
+  uint16_t white = getColor(255, 255, 255);
+  dev->bitmap->pixel[i][j]=white;
+}
+
+int main(void) {
+  display_dot(pi_framebuffer_t *dev);
+}
