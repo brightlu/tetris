@@ -8,6 +8,7 @@
 
 int running=1;
 pi_i2c_t* gyro=NULL;
+int pressed = 0;
 void callbackFunc(unsigned int code) {
   printf("code: %u\t",code);
 
@@ -17,6 +18,7 @@ void callbackFunc(unsigned int code) {
       printf("move piece down");
     }else if(code == KEY_RIGHT) {
       printf("move piece right");
+      pressed = 1;
     }else if(code == KEY_LEFT) {
       printf("move piece left");
     }else if(code == KEY_ENTER) {
@@ -60,10 +62,12 @@ int main(void) {
         int integer;
 
 	while (1) {
-	  //clearBitmap(dev->bitmap, 0);
-	  first = move_piece_down(first);
-	  delay(10000);
 	  draw_piece(first, dev);
 	  pollJoystick(joystick, callbackFunc, 1000);
+
+	  if (pressed != 0) {
+		  clearBitmap(dev->bitmap, 0);
+		  first = move_piece_down(first);
+		  pressed = 0;
 	}
 }
