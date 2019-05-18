@@ -6,3 +6,5 @@ typedef struct Piece {
 
 
 piece *move_piece_down(piece *pi);
+piece *move_piece_right(piece *pi);
+piece *move_piece_left(piece *pi);
