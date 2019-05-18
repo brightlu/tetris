@@ -3,12 +3,10 @@
 #include <time.h>
 
 piece *move_piece_down(piece *pi){
-	piece *trans;
-	if (trans->ypos < 0) {
-	  return trans;
+	if (pi->xpos > 7) {
+	  return pi;
 	} else { 
-	  trans->xpos = pi->xpos + 1;
-	  trans->type = pi->type;
-	  trans->ypos = pi->ypos;
+	  pi->xpos = pi->xpos + 1;
+	  return pi;
 	}
 }
