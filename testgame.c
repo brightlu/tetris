@@ -135,6 +135,31 @@ void rotate(piece *p, int data_x) {
   }
 }
 
+int isBelow(int x, int y, pixel *top) {
+	pixel *p;
+	p = top;
+	while(p != NULL){
+  	     p = p->next;
+	     if (x + 1 == p->x && y == p->y) {
+		     return 1;
+	     }
+	}
+
+	return 0;
+}
+
+int checkOpen(piece *pi, pixel *lop) {
+	if (pi->type == 0) {
+		return isBelow(pi->xpos, pi->ypos, lop);
+	} else if (pi->type == 1) {
+		if (pi->rotate == 0 || pi->rotate == 2) {
+			return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop);
+		} else {
+			return isBelow(pi->xpos, pi->ypos, lop);
+		}
+	}
+}
+
 int main(void) {
   
         pi_framebuffer_t *dev = getFBDevice();
@@ -201,7 +226,18 @@ int main(void) {
 	    left = 0;
 	    clearBitmap(dev->bitmap, 0);
 	  } else {
-	    first = move_piece_down(first);
+	    if (checkOpen(first, lp) == 0) {
+		    first = move_piece_down(first);
+	    } else {
+		    lp = createLockedPiece(first, lp);
+		    free(first);
+		    first = malloc(sizeof(piece));
+            	    first->xpos = 1;
+            	    first->ypos = 1;
+            	    first->type = newType;
+            	    first->rotate = 0;
+	    }
+
 	    //second = move_piece_down(second);
 	    delay(1000);
 	    clearBitmap(dev->bitmap, 0);
