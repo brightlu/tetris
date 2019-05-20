@@ -56,7 +56,7 @@ void display_r_piece(pi_framebuffer_t *dev, int x, int y, int rotate) {
   } else if (rotate == 2) {
     dev->bitmap->pixel[x-1][y-1]=orange;
   } else if (rotate == 3) {
-    dev->bitmap->pixel[x-1][y]=orange;
+    dev->bitmap->pixel[x][y-1]=orange;
   }
 }
 
