@@ -6,6 +6,13 @@
 #include <stdio.h>
 #include <linux/input.h>
 
+typedef struct LockedPixel {
+	int x;
+	int y;
+	int color;
+	struct LockedPixel *next;
+} pixel;
+
 int running=1;
 pi_i2c_t* gyro=NULL;
 int pressed = 0;
@@ -14,6 +21,56 @@ int left = 0;
 
 piece *first = NULL;
 piece *second = NULL;
+pixel *lp = NULL;
+
+void lockPixel(int x, int y, int color, pixel *head) {
+	pixel *temp;
+	pixel *p;
+    	temp = malloc(sizeof(pixel));
+    	temp->x = x;
+    	temp->y = y;
+    	temp->color = color;
+    	temp->next = NULL;
+
+	if (head == NULL){
+        	head = temp;
+    	} else {
+        	p = head;
+        	while(p->next != NULL){
+            		p = p->next;
+        	}
+        	p->next = temp;
+    }
+    //return head;
+}
+
+void createLockedPiece(piece *p) {
+	if (p->type == 0) {
+		lockPixel(p->xpos, p->ypos, p->type, lp);
+	} else if (p->type == 1) {
+		lockPixel(p->xpos, p->ypos, p->type, lp);
+		if (p->rotate == 0 || p->rotate == 2) {
+			lockPixel(p->xpos, p->ypos + 1, p->type, lp);
+		} else {
+                        lockPixel(p->xpos - 1, p->ypos, p->type, lp);
+		}
+	}
+}
+
+void draw_locked_pieces(pi_framebuffer_t *dev, pixel *lop) {
+	pixel *p;
+	p = lop;
+	while(p != NULL) {
+		if (p->color == 0) {
+			dev->bitmap->pixel[p->x][p->y] = getColor(255, 0, 0);
+		} else if (p->color == 1) {
+			dev->bitmap->pixel[p->x][p->y] = getColor(0, 255, 0);
+		} 
+		
+		p = p->next;
+	}
+}
+
 
 void callbackFunc(unsigned int code) {
   printf("code: %u\t",code);
@@ -101,17 +158,36 @@ int main(void) {
 
         int integer;
 	
-	while (1) {
+	while (running) {
 	  getMagData(gyro, &data);
 	  rotate(first, data.x);
 	  draw_piece(first, dev);
+	  draw_locked_pieces(dev, lp);
 	  //draw_piece(second, dev);
 	  pollJoystick(joystick, callbackFunc, 1000);
 	  printf("xpos: %i\n", first->xpos);
 	  printf("rotate: %i\n", first->rotate);
 	  if (first->xpos >= 7) {
 	    first->xpos = 7;
-	    break;
+	    createLockedPiece(first);
+	    int newType = 0;
+
+	    if (first->type == 0) {
+		    newType = 1;
+	    } else {
+		    newType = 0;
+	    }
+
+	    free(first);
+
+	    first = malloc(sizeof(piece));
+
+	    first->xpos = 1;
+	    first->ypos = 1;
+	    first->type = newType;
+	    first->rotate = 0;
+	    clearBitmap(dev->bitmap, 0);
+
 	  } else if (right) {
 	    //rotate(first, 35);
 	    first = move_piece_right(first);
