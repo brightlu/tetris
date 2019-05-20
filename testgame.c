@@ -48,6 +48,8 @@ void draw_piece(piece *p, pi_framebuffer_t *dev) {
 	  display_three_dot(dev, p->xpos, p->ypos, p->rotate);
 	} else if (p->type == 3) {
 	  display_z_piece(dev, p->xpos, p->ypos, p->rotate);
+	} else if (p->type == 4) {
+	  display_r_piece(dev, p->xpos, p->ypos, p->rotate);
 	}
 }
 
@@ -87,7 +89,7 @@ int main(void) {
 	
         first->xpos = 1;
         first->ypos = 1;
-        first->type = 3;
+        first->type = 4;
 	first->rotate = 0;
 	
 	//second->xpos = 1;

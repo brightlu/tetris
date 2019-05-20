@@ -45,10 +45,17 @@ void display_z_piece(pi_framebuffer_t *dev, int x, int y, int rotate) {
   }
 }
 
-void display_r_piece(pi_framebuffer_t *dev, int x, int y) {
+void display_r_piece(pi_framebuffer_t *dev, int x, int y, int rotate) {
   uint16_t orange = getColor(255, 128, 0);
-  dev->bitmap->pixel[y][x]=orange;
-  dev->bitmap->pixel[y][x-1]=orange;
-  dev->bitmap->pixel[y+1][x-1]=orange;
-  dev->bitmap->pixel[y-1][x]=orange;
+  dev->bitmap->pixel[x][y]=orange;
+  dev->bitmap->pixel[x-1][y]=orange;
+  if (rotate == 0) {
+    dev->bitmap->pixel[x][y+1]=orange;
+  } else if (rotate == 1) {
+    dev->bitmap->pixel[x-1][y+1]=orange;
+  } else if (rotate == 2) {
+    dev->bitmap->pixel[x-1][y-1]=orange;
+  } else if (rotate == 3) {
+    dev->bitmap->pixel[x-1][y]=orange;
+  }
 }
