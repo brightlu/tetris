@@ -4,6 +4,7 @@
 #include "piece.h"
 #include "outputtest.h"
 #include <stdio.h>
+#include <time.h>
 #include <linux/input.h>
 
 typedef struct LockedPixel {
@@ -55,7 +56,58 @@ pixel *createLockedPiece(piece *p, pixel *head) {
 		} else {
                         head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
 		}
+	} else if (p->type == 2) {
+		head = lockPixel(p->xpos, p->ypos, p->type, head);
+                if (p->rotate == 0 || p->rotate == 2) {
+                        head = lockPixel(p->xpos, p->ypos + 1, p->type, head);
+			head = lockPixel(p->xpos, p->ypos + 2, p->type, head);
+                } else {
+                        head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
+			head = lockPixel(p->xpos - 2, p->ypos, p->type, head);
+                }
+	} else if (p->type == 3) {
+                head = lockPixel(p->xpos, p->ypos, p->type, head);
+                if (p->rotate == 0 || p->rotate == 2) {
+                        head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
+                        head = lockPixel(p->xpos - 1, p->ypos - 1, p->type, head);
+			head = lockPixel(p->xpos, p->ypos + 1, p->type, head);
+                } else {
+                        head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
+                        head = lockPixel(p->xpos - 1, p->ypos + 1, p->type, head);
+                        head = lockPixel(p->xpos - 2, p->ypos + 1, p->type, head);
+                }
+        } else if (p->type == 4) {
+		head = lockPixel(p->xpos, p->ypos, p->type, head);
+		head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
+
+		if (p->rotate == 0) {
+			head = lockPixel(p->xpos, p->ypos + 1, p->type, head);
+		} else if (p->rotate == 1) {
+			head = lockPixel(p->xpos - 1, p->ypos + 1, p->type, head);
+		} else if (p->rotate == 2) {
+			head = lockPixel(p->xpos - 1, p->ypos - 1, p->type, head);
+		} else {
+			head = lockPixel(p->xpos, p->ypos - 1, p->type, head);
+		}
+	} else { 
+		head = lockPixel(p->xpos, p->ypos, p->type, head);
+		head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
+
+		if (p->rotate == 0) {
+                        head = lockPixel(p->xpos, p->ypos + 1, p->type, head);
+			head = lockPixel(p->xpos, p->ypos - 1, p->type, head);
+                } else if (p->rotate == 1) {
+                        head = lockPixel(p->xpos - 1, p->ypos + 1, p->type, head);
+			head = lockPixel(p->xpos - 2, p->ypos, p->type, head);
+                } else if (p->rotate == 2) {
+                        head = lockPixel(p->xpos - 1, p->ypos - 1, p->type, head);
+			head = lockPixel(p->xpos - 1, p->ypos + 1, p->type, head);
+                } else {
+                        head = lockPixel(p->xpos - 1, p->ypos - 1, p->type, head);
+			head = lockPixel(p->xpos - 2, p->ypos, p->type, head);
+                }
 	}
+
 	return head;
 }
 
@@ -67,7 +119,15 @@ void draw_locked_pieces(pi_framebuffer_t *dev, pixel *lop) {
 			dev->bitmap->pixel[p->x][p->y] = getColor(255, 0, 0);
 		} else if (p->color == 1) {
 			dev->bitmap->pixel[p->x][p->y] = getColor(0, 255, 0);
-		} 
+		} else if (p->color == 2) {
+			dev->bitmap->pixel[p->x][p->y] = getColor(0, 0, 255);
+		} else if (p->color == 3) {
+                        dev->bitmap->pixel[p->x][p->y] = getColor(255, 255, 51);
+                } else if (p->color == 4) {
+                        dev->bitmap->pixel[p->x][p->y] = getColor(255, 128, 0);
+                } else {
+                        dev->bitmap->pixel[p->x][p->y] = getColor(255, 0, 255);
+                }
 		
 		p = p->next;
 	}
@@ -157,7 +217,39 @@ int checkOpen(piece *pi, pixel *lop) {
 		} else {
 			return isBelow(pi->xpos, pi->ypos, lop);
 		}
-	}
+	} else if (pi->type == 2) {
+		if (pi->rotate == 0 || pi->rotate == 2) {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop) + isBelow(pi->xpos, pi->ypos + 2, lop);
+                } else {
+                        return isBelow(pi->xpos, pi->ypos, lop);
+                }
+	} else if (pi->type == 3) {
+                if (pi->rotate == 0 || pi->rotate == 2) {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop) + isBelow(pi->xpos - 1, pi->ypos - 1, lop);
+                } else {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos + 1, lop);
+                }
+        } else if (pi->type == 4) {
+                if (pi->rotate == 0) {
+			return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop);
+		} else if (pi->rotate == 1) {
+			return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos + 1, lop);
+		} else if (pi->rotate == 2) {
+			return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos - 1, lop);
+		} else {
+			return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos - 1, lop);
+		}
+        } else {
+                if (pi->rotate == 0) {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop) + isBelow(pi->xpos, pi->ypos - 1, lop);
+                } else if (pi->rotate == 1) {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos + 1, lop);
+                } else if (pi->rotate == 2) {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos - 1, lop) + isBelow(pi->xpos - 1, pi->ypos + 1, lop);
+                } else {
+                        return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos - 1, lop);
+                }
+        }
 }
 
 int main(void) {
@@ -170,13 +262,20 @@ int main(void) {
 	pixel *lp = NULL;
 	
         int moved = 0;
+	srand48(time(NULL));
 
         first = malloc(sizeof(piece));
 	//second = malloc(sizeof(piece));
 	
+	int choice;
+	choice = (int)(drand48() * 6);
+	if (choice == 6) {
+		choice == 5;
+        }
+	
         first->xpos = 1;
         first->ypos = 1;
-        first->type = 1;
+        first->type = choice;
 	first->rotate = 0;
 	
 	//second->xpos = 1;
@@ -185,7 +284,6 @@ int main(void) {
 	clearBitmap(dev->bitmap, 0);
 
         int integer;
-	int newType = 0;
 	
 	while (running) {
 	  getMagData(gyro, &data);
@@ -200,10 +298,12 @@ int main(void) {
 	    first->xpos = 7;
 	    lp = createLockedPiece(first, lp);
 
-	    if (first->type == 0) {
-		    newType = 1;
-	    } else {
-		    newType = 0;
+	    int choicet;
+
+	    choicet = (int)(drand48() * 6);
+
+	    if (choicet == 6) {
+		    choicet == 5;
 	    }
 
 	    free(first);
@@ -212,7 +312,7 @@ int main(void) {
 
 	    first->xpos = 1;
 	    first->ypos = 1;
-	    first->type = newType;
+	    first->type = choicet;
 	    first->rotate = 0;
 	    clearBitmap(dev->bitmap, 0);
 
