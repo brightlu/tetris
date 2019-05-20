@@ -139,10 +139,10 @@ int isBelow(int x, int y, pixel *top) {
 	pixel *p;
 	p = top;
 	while(p != NULL){
-  	     p = p->next;
 	     if (x + 1 == p->x && y == p->y) {
 		     return 1;
 	     }
+	     p = p->next;
 	}
 
 	return 0;
@@ -185,6 +185,7 @@ int main(void) {
 	clearBitmap(dev->bitmap, 0);
 
         int integer;
+	int newType = 0;
 	
 	while (running) {
 	  getMagData(gyro, &data);
@@ -198,7 +199,6 @@ int main(void) {
 	  if (first->xpos >= 7) {
 	    first->xpos = 7;
 	    lp = createLockedPiece(first, lp);
-	    int newType = 0;
 
 	    if (first->type == 0) {
 		    newType = 1;
@@ -234,7 +234,7 @@ int main(void) {
 		    first = malloc(sizeof(piece));
             	    first->xpos = 1;
             	    first->ypos = 1;
-            	    first->type = newType;
+            	    first->type = 0;
             	    first->rotate = 0;
 	    }
 
