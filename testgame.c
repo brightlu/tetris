@@ -39,15 +39,20 @@ void callbackFunc(unsigned int code) {
 
 
 void draw_piece(piece *p, pi_framebuffer_t *dev) {
-
         if (p->type == 0) {
-                display_dot(dev, p->xpos, p->ypos);
+          display_dot(dev, p->xpos, p->ypos);
         } else if (p->type == 1) {
 	  display_two_dot(dev, p->xpos, p->ypos);
         } else if (p->type == 2) {
-	  display_three_dot(dev, p->xpos, p->ypos);
+	  display_two_dot_rotate(dev, p->xpos, p->ypos);
 	} else if (p->type == 3) {
+	  display_three_dot(dev, p->xpos, p->ypos);
+	} else if (p->type == 4) {
+	  display_three_dot_rotate(dev, p->xpos, p->ypos);
+	} else if (p->type == 5) {
 	  display_z_piece(dev, p->xpos, p->ypos);
+	} else if (p->type == 6) {
+	  display_z_piece_rotate_1(dev, p->xpos, p->ypos);
 	}
 }
 
@@ -56,10 +61,22 @@ void delay(int time) {
         }
 }
 
+void rotate(piece *p, int data_x) {
+  if (data_x > 30) {
+    if (p->rotate == 0) {
+      
+    }
+  } else if (data_x < -30) {
+  }
+}
+
 int main(void) {
   
         pi_framebuffer_t *dev = getFBDevice();
 	pi_joystick_t *joystick = getJoystickDevice();
+	gyro = geti2cDevice();
+	configureAccelGyro(gyro);
+	coordinate_t data;
 
         int moved = 0;
 
@@ -68,8 +85,9 @@ int main(void) {
 	
         first->xpos = 1;
         first->ypos = 1;
-        first->type = 3;
-
+        first->type = 6;
+	first->rotate = 0;
+	
 	//second->xpos = 1;
 	//second->ypos = 4;
 	//second->type = 0;
@@ -78,6 +96,7 @@ int main(void) {
         int integer;
 	
 	while (1) {
+	  getMagData(gyro, &data);
 	  draw_piece(first, dev);
 	  //draw_piece(second, dev);
 	  pollJoystick(joystick, callbackFunc, 1000);
