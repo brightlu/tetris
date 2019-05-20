@@ -59,3 +59,22 @@ void display_r_piece(pi_framebuffer_t *dev, int x, int y, int rotate) {
     dev->bitmap->pixel[x-1][y]=orange;
   }
 }
+
+void display_t_piece(pi_framebuffer_t *dev, int x, int y, int rotate) {
+  uint16_t purple = getColor(255, 0, 255);
+  dev->bitmap->pixel[x][y]=purple;
+  dev->bitmap->pixel[x-1][y]=purple;
+  if (rotate == 0) {
+    dev->bitmap->pixel[x][y-1]=purple;
+    dev->bitmap->pixel[x][y+1]=purple;
+  } else if (rotate == 1) {
+    dev->bitmap->pixel[x-2][y]=purple;
+    dev->bitmap->pixel[x-1][y+1]=purple;
+  } else if (rotate == 2) {
+    dev->bitmap->pixel[x-1][y-1]=purple;
+    dev->bitmap->pixel[x-1][y+1]=purple;
+  } else if (rotate == 3) {
+    dev->bitmap->pixel[x-2][y]=purple;
+    dev->bitmap->pixel[x-1][y-1]=purple;
+  }
+}
