@@ -283,6 +283,7 @@ int main(void) {
 	//second->type = 0;
 	clearBitmap(dev->bitmap, 0);
 
+	int choicet;
         int integer;
 	
 	while (running) {
@@ -297,8 +298,6 @@ int main(void) {
 	  if (first->xpos >= 7) {
 	    first->xpos = 7;
 	    lp = createLockedPiece(first, lp);
-
-	    int choicet;
 
 	    choicet = (int)(drand48() * 6);
 
@@ -334,7 +333,11 @@ int main(void) {
 		    first = malloc(sizeof(piece));
             	    first->xpos = 1;
             	    first->ypos = 1;
-            	    first->type = 0;
+		    choicet = (int)(drand48()*6);
+		    if (choicet == 6) {
+		      choicet = 5;
+		    }
+            	    first->type = choicet;
             	    first->rotate = 0;
 	    }
 
