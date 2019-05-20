@@ -21,9 +21,8 @@ int left = 0;
 
 piece *first = NULL;
 piece *second = NULL;
-pixel *lp = NULL;
 
-void lockPixel(int x, int y, int color, pixel *head) {
+pixel *lockPixel(int x, int y, int color, pixel *head) {
 	pixel *temp;
 	pixel *p;
     	temp = malloc(sizeof(pixel));
@@ -34,27 +33,30 @@ void lockPixel(int x, int y, int color, pixel *head) {
 
 	if (head == NULL){
         	head = temp;
+		printf("null");
     	} else {
         	p = head;
+		printf("next");
         	while(p->next != NULL){
             		p = p->next;
         	}
         	p->next = temp;
     }
-    //return head;
+    return head;
 }
 
-void createLockedPiece(piece *p) {
+pixel *createLockedPiece(piece *p, pixel *head) {
 	if (p->type == 0) {
-		lockPixel(p->xpos, p->ypos, p->type, lp);
+		head = lockPixel(p->xpos, p->ypos, p->type, head);
 	} else if (p->type == 1) {
-		lockPixel(p->xpos, p->ypos, p->type, lp);
+		head = lockPixel(p->xpos, p->ypos, p->type, head);
 		if (p->rotate == 0 || p->rotate == 2) {
-			lockPixel(p->xpos, p->ypos + 1, p->type, lp);
+			head = lockPixel(p->xpos, p->ypos + 1, p->type, head);
 		} else {
-                        lockPixel(p->xpos - 1, p->ypos, p->type, lp);
+                        head = lockPixel(p->xpos - 1, p->ypos, p->type, head);
 		}
 	}
+	return head;
 }
 
 void draw_locked_pieces(pi_framebuffer_t *dev, pixel *lop) {
@@ -140,7 +142,8 @@ int main(void) {
 	gyro = geti2cDevice();
 	configureAccelGyro(gyro);
 	coordinate_t data;
-
+	pixel *lp = NULL;
+	
         int moved = 0;
 
         first = malloc(sizeof(piece));
@@ -148,7 +151,7 @@ int main(void) {
 	
         first->xpos = 1;
         first->ypos = 1;
-        first->type = 4;
+        first->type = 1;
 	first->rotate = 0;
 	
 	//second->xpos = 1;
@@ -169,7 +172,7 @@ int main(void) {
 	  printf("rotate: %i\n", first->rotate);
 	  if (first->xpos >= 7) {
 	    first->xpos = 7;
-	    createLockedPiece(first);
+	    lp = createLockedPiece(first, lp);
 	    int newType = 0;
 
 	    if (first->type == 0) {
