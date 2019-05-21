@@ -138,21 +138,54 @@ piece *move_piece_left(piece *pi){
 }
 
 void rotate(piece *p, int data_x) {
-  if (data_x < -30) {
-    if (p->rotate == 3) {
-      p->rotate = 0;
-    } else {
-      p->rotate = p->rotate + 1;
-    }
-  } else if (data_x > 30) {
-    if (p->rotate == 0) {
-      p->rotate = 3;
-    } else {
-      p->rotate = p->rotate - 1;
-    }
-  }
+	if ((p->type == 0) || (p->type == 4) || (p->type == 5) || ((p->type == 1) && (p->ypos <= 6)) || ((p->type == 2) && (p->ypos <= 5)) || ((p->type == 3) && (p->ypos >= 1) && (p->ypos <= 6))) {
+		if (data_x < -30){
+			if (p->type == 4) {
+				if (((p->ypos == 0) && (p->rotate == 1)) || ((p->ypos == 7) && (p->rotate == 3))) {
+				} else if (p->rotate == 3) {
+					p->rotate = 0;
+				} else {
+					p->rotate = p->rotate + 1;
+				}
+			} else if (p->type == 5) {
+				if (((p->ypos == 0) && (p->rotate == 2)) || ((p->ypos == 7) && (p->rotate == 3))) {
+				} else if (p->rotate == 3) {
+					p->rotate = 0;
+				} else {
+					p->rotate = p->rotate + 1;
+				}
+			} else {
+				if (p->rotate == 3) {
+					p->rotate = 0;
+				} else {
+					p->rotate = p->rotate + 1;
+				}
+			}
+		} else if (data_x > 30) {
+			if (p->type == 4) {
+				if (((p->ypos == 0) && (p->rotate == 0)) || ((p->ypos == 7) && (p->rotate == 2))) {
+				} else if (p->rotate == 0) {
+					p->rotate = 3;
+				} else {
+					p->rotate = p->rotate - 1;
+				}
+			} else if (p->type == 5) {
+				if (((p->ypos == 0) && (p->rotate == 1)) || ((p->ypos == 7) && (p->rotate == 3))) {
+				} else if (p->rotate == 0) {
+					p->rotate = 3;
+				} else {
+					p->rotate = p->rotate - 1;
+				}
+			} else {
+				if (p->rotate == 0) {
+					p->rotate = 3;
+				} else {
+				p->rotate = p->rotate - 1;
+				}
+			}
+		}
+	}
 }
-
 
 void draw_locked_pieces(pi_framebuffer_t *dev, pixel *lop) {
         pixel *p;
