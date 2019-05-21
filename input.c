@@ -49,8 +49,7 @@ pixel *move_pixel_down(pixel *lop, int xpos) {
 }
 
 pixel *clearRow(pixel **lop, int xpos) {
-	pixel *p;
-        p = *lop;
+	pixel *p = *lop;
 
 	if (p->x == xpos) {
                         *lop = p->next;   // Change head
@@ -58,8 +57,8 @@ pixel *clearRow(pixel **lop, int xpos) {
 	}
 
 
-        while(p->next->next != NULL) {
-		pixel *next = p->next->next;
+        while(p != NULL) {
+		pixel *next = p->next;
                 if (p->next->x == xpos) {
                         free(p->next);
 	 		p->next = next;		// free old hea
