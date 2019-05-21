@@ -52,11 +52,14 @@ pixel *clearRow(pixel **lop, int xpos) {
 	pixel *p = *lop;
 
         while(p->next != NULL) {
-		pixel *next = p->next;
-                if (p->x == xpos) {
-                        free(p);
-	 		p = next;		// free old hea
-    		}
+		pixel *next = p->next->next;
+                if (p->next->x == xpos) {
+			p->next = NULL;
+                        free(p->next);
+			p->next = next;
+    		} else {
+			p = p->next;
+		}
         }
 
 	return p;
