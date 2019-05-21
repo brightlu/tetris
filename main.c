@@ -119,13 +119,14 @@ int main(void) {
 			    running = 0;
 			    free(first);
 			    break;
+		    } else {
+			    free(first);
+			    first = malloc(sizeof(piece));
+			    first->xpos = 1;
+                    	    first->ypos = 3;
+                    	    first->type = choicet;
+                    	    first->rotate = 0;
 		    }
-                    free(first);
-                    first = malloc(sizeof(piece));
-                    first->xpos = 1;
-                    first->ypos = 3;
-                    first->type = choicet;
-                    first->rotate = 0;
             }
 
 	    if (checkFullRows(lp) != 0) {
