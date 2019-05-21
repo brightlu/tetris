@@ -1,2 +1,20 @@
-Bright Lu
-Sam Herring
+Partner #1: Bright Lu
+     UD ID: 702414437
+     email: brightlu@udel.edu
+Partner #2: Sam Herring
+     UD ID: 702485952
+     email: sherring@udel.edu
+
+This project is implementing the game Tetris on a Raspberry Pi.
+Bright Lu and Sam Herring collaborated in person to develop each file;
+exact documentation can be found on GitHub, https://github.com/brightlu/tetris
+
+Tetris is a tile-matching puzzle video game. Various pieces fall onto a grid;
+when pieces form a solid horizontal line without gaps, the line clears. 
+The objective is to gain points by clearing rows.
+
+Tetris on the Pi can be played by using the joystick and gyroscope. 
+The joystick controls movement of the piece left, right, and down.
+the gyroscope controls rotation; tilt left and right to rotate pieces.
+
+When a piece locks on the top row, the game ends and returns your score. 
