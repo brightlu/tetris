@@ -38,12 +38,14 @@ int count(pixel *head, int search_x)
 pixel *move_pixel_down(pixel *lop, int xpos) {
 	pixel *p;
         p = lop;
-        while(p != NULL) {
+        while(p->next != NULL) {
                 if (p->x < xpos) {
                         p->x = p->x + 1;
                 }
                 p = p->next;
         }
+
+	return p;
 }
 
 pixel *clearRow(pixel **lop, int xpos) {
@@ -56,7 +58,7 @@ pixel *clearRow(pixel **lop, int xpos) {
 	}
 
 
-        while(p->next != NULL) {
+        while(p->next->next != NULL) {
 		pixel *next = p->next->next;
                 if (p->next->x == xpos) {
                         free(p->next);
