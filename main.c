@@ -134,4 +134,5 @@ int main(void) {
         }
 
 	destroy_lop(&lp);
+	printf("You cleared %d rows!", score);
 }
