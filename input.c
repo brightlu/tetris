@@ -51,13 +51,12 @@ pixel *move_pixel_down(pixel *lop, int xpos) {
 pixel *clearRow(pixel **lop, int xpos) {
 	pixel *p = *lop;
 
-        while(p != NULL) {
+        while(p->next != NULL) {
 		pixel *next = p->next;
                 if (p->x == xpos) {
                         free(p);
 	 		p = next;		// free old hea
     		}
-                p = p->next;
         }
 
 	return p;
