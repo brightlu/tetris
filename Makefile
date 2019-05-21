@@ -10,5 +10,8 @@ inputtest: inputtest.o
 testgame: testgame.o
 	cc outputtest.c piece.c -o testgame $(INCLUDE) testgame.o $(LDFLAGS)
 
+main: main.o
+	cc output.c input.c -o main $(INCLUDE) main.o $(LDFLAGS)
+
 clean:
 	rm -f *.o inputtest testgame
