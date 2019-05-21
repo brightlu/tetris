@@ -129,4 +129,6 @@ int main(void) {
             clearBitmap(dev->bitmap, 0);
           }
         }
+
+	detroy_lop(&lp);
 }

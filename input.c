@@ -7,6 +7,21 @@
 #include <time.h>
 #include <linux/input.h>
 
+void destroy_lop(pixel **p) {
+    pixel *current = *p;
+    pixel *next;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    /* deref head_ref to affect the real head back
+     in the caller. */
+    *p = NULL;
+}
 
 int count(pixel *head, int search_x)
 {

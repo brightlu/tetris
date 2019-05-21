@@ -40,4 +40,7 @@ int isRightTo(int x, int y, pixel *top);
 int checkOpenLeftTo(piece *pi, pixel *lop);
 int checkOpenRightTo(piece *pi, pixel *lop);
 int checkOpenBelow(piece *pi, pixel *lop);
-
+pixel *move_pixel_down(pixel *lop, int xpos);
+pixel *clearRow(pixel **lop, int xpos);
+void checkFullRows(pixel *lp);
+int count(pixel *head, int search_x);
