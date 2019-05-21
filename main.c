@@ -115,7 +115,7 @@ int main(void) {
                     first = move_piece_down(first);
             } else {
                     lp = createLockedPiece(first, lp);
-		    if (first->xpos < 1) {
+		    if (lp->x < 1) {
 			    running = 0;
 			    free(first);
 			    break;

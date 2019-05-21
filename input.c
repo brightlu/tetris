@@ -51,6 +51,14 @@ pixel *move_pixel_down(pixel *lop, int xpos) {
 pixel *clearRow(pixel **lop, int xpos) {
 	pixel *p = *lop;
 
+	if (p->xpos == xpos) {
+		pixel *next;
+		next = p->next;
+		free(p);
+		p = next;
+	}
+
+
         while(p->next != NULL) {
 		pixel *next = p->next->next;
                 if (p->next->x == xpos) {
