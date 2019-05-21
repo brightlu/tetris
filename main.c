@@ -82,22 +82,20 @@ int main(void) {
           pollJoystick(joystick, callbackFunc, 1000);
           printf("xpos: %i\n", first->xpos);
           printf("rotate: %i\n", first->rotate);
+	  choicet = (int)(drand48() * 6);
+	  if (choicet == 6) {
+	    choicet == 5;
+	  }
           if (first->xpos >= 7) {
             first->xpos = 7;
             lp = createLockedPiece(first, lp);
-
-            choicet = (int)(drand48() * 6);
-
-            if (choicet == 6) {
-                    choicet == 5;
-            }
 
             free(first);
 
             first = malloc(sizeof(piece));
 
             first->xpos = 1;
-            first->ypos = 1;
+            first->ypos = 3;
             first->type = choicet;
             first->rotate = 0;
             clearBitmap(dev->bitmap, 0);
@@ -111,8 +109,6 @@ int main(void) {
             first = move_piece_left(first);
             left = 0;
             clearBitmap(dev->bitmap, 0);
-            clearBitmap(dev->bitmap, 0);
-
           } else if (right) {
             //rotate(first, 35);
             first = move_piece_right(first);
@@ -131,10 +127,6 @@ int main(void) {
                     first = malloc(sizeof(piece));
                     first->xpos = 1;
                     first->ypos = 3;
-                    choicet = (int)(drand48()*6);
-                    if (choicet == 6) {
-                      choicet = 5;
-                    }
                     first->type = choicet;
                     first->rotate = 0;
             }

@@ -106,14 +106,30 @@ piece *move_piece_down(piece *pi){
 piece *move_piece_right(piece *pi){
         if (pi->ypos >= 7) {
           return pi;
-        } else {
+        } else if ((pi->ypos >= 6) && ((pi->rotate == 0) || (pi->rotate == 2)) && (pi->type == 1)) {
+	  return pi;
+	} else if ((pi->ypos >= 5) && ((pi->rotate == 0) || (pi->rotate == 2)) && (pi->type == 2)) {
+          return pi;
+	} else if ((pi->ypos >= 6) && (pi->type == 3)) {
+	  return pi;
+	} else if ((pi->ypos >= 6) && ((pi->rotate == 0) || (pi->rotate == 1)) && (pi->type == 4)) {
+	  return pi;
+	} else if ((pi->ypos >= 6) && (pi->rotate != 3) && (pi->type == 5)) {
+	  return pi;
+	} else {
           pi->ypos = pi->ypos + 1;
           return pi;
         }
 }
 
 piece *move_piece_left(piece *pi){
-        if (pi->ypos < 1) {
+        if (pi->ypos == 0) {
+	  return pi;
+	} else if ((pi->ypos >= 1) && ((pi->rotate == 0) || (pi->rotate == 2)) && (pi->type == 3)) {
+          return pi;
+        } else if ((pi->ypos >= 1) && ((pi->rotate == 2) || (pi->rotate == 3)) && (pi->type == 4)) {
+          return pi;
+        } else if ((pi->ypos >= 1) && (pi->rotate != 1) && (pi->type == 5)) {
           return pi;
         } else {
           pi->ypos = pi->ypos - 1;
