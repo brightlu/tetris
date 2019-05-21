@@ -8,6 +8,61 @@
 #include <linux/input.h>
 
 
+int count(pixel *head, int search_x)
+{
+    pixel *current = head;
+    int count = 0;
+    while (current != NULL) {
+        if (current->x == search_x)
+            count++;
+        current = current->next;
+    }
+    return count;
+}
+
+pixel *move_pixel_down(pixel *lop, int xpos) {
+	pixel *p;
+        p = lop;
+        while(p != NULL) {
+                if (p->x < xpos) {
+                        p->x = p->x + 1;
+                }
+                p = p->next;
+        }
+}
+
+pixel *clearRow(pixel **lop, int xpos) {
+	pixel *p;
+        p = *lop;
+
+	if (p->x == xpos) {
+                        *lop = p->next;   // Change head
+                        free(p);               // free old head
+	}
+
+
+        while(p->next != NULL) {
+		pixel *next = p->next->next;
+                if (p->next->x == xpos) {
+                        free(p->next);
+	 		p->next = next;		// free old hea
+    		}
+            
+                p = p->next;
+        }
+
+	return p;
+}
+
+void checkFullRows(pixel *lp) {
+	for (int i = 7; i >= 0; i--) {
+		if (count(lp, i) == 8) {
+			lp = clearRow(&lp, i);
+			lp = move_pixel_down(lp, i);
+		}
+	}
+}
+
 pixel *lockPixel(int x, int y, int color, pixel *head) {
         pixel *temp;
         pixel *p;

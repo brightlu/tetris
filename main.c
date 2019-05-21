@@ -122,6 +122,8 @@ int main(void) {
                     first->rotate = 0;
             }
 
+	    checkFullRows(lp);
+
             //second = move_piece_down(second);
             delay(1000);
             clearBitmap(dev->bitmap, 0);
