@@ -13,6 +13,7 @@ pi_i2c_t* gyro=NULL;
 int pressed = 0;
 int right = 0;
 int left = 0;
+int score = 0;
 
 piece *first = NULL;
 piece *second = NULL;
@@ -122,7 +123,9 @@ int main(void) {
                     first->rotate = 0;
             }
 
-	    checkFullRows(lp);
+	    if (checkFullRows(lp) != 0) {
+		    score++;
+	    }
 
             //second = move_piece_down(second);
             delay(1000);
@@ -130,5 +133,5 @@ int main(void) {
           }
         }
 
-	detroy_lop(&lp);
+	destroy_lop(&lp);
 }

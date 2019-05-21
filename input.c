@@ -63,13 +63,16 @@ pixel *clearRow(pixel **lop, int xpos) {
 	return p;
 }
 
-void checkFullRows(pixel *lp) {
+int checkFullRows(pixel *lp) {
 	for (int i = 7; i >= 0; i--) {
 		if (count(lp, i) == 8) {
 			lp = clearRow(&lp, i);
 			lp = move_pixel_down(lp, i);
+			return 1;
 		}
 	}
+
+	return 0;
 }
 
 pixel *lockPixel(int x, int y, int color, pixel *head) {
