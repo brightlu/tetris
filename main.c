@@ -52,7 +52,7 @@ int main(void) {
         srand48(time(NULL));
 
         first = malloc(sizeof(piece));
-        //second = malloc(sizeof(piece));
+        second = malloc(sizeof(piece));
 
         int choice;
         choice = (int)(drand48() * 6);
@@ -100,26 +100,17 @@ int main(void) {
             first->rotate = 0;
             clearBitmap(dev->bitmap, 0);
 
-          } else if (right) {
+          } else if (right && (checkOpenRightTo(first, lp) == 0)) {
             //rotate(first, 35);
             first = move_piece_right(first);
             right = 0;
             clearBitmap(dev->bitmap, 0);
-          } else if (left) {
-            first = move_piece_left(first);
-            left = 0;
-            clearBitmap(dev->bitmap, 0);
-          } else if (right) {
-            //rotate(first, 35);
-            first = move_piece_right(first);
-            right = 0;
-            clearBitmap(dev->bitmap, 0);
-          } else if (left) {
+          } else if (left && (checkOpenLeftTo(first, lp) == 0)) {
             first = move_piece_left(first);
             left = 0;
             clearBitmap(dev->bitmap, 0);
           } else {
-            if (checkOpen(first, lp) == 0) {
+            if (checkOpenBelow(first, lp) == 0) {
                     first = move_piece_down(first);
             } else {
                     lp = createLockedPiece(first, lp);

@@ -14,4 +14,4 @@ main: main.o
 	cc output.c input.c -o main $(INCLUDE) main.o $(LDFLAGS)
 
 clean:
-	rm -f *.o inputtest testgame
+	rm -f *.o inputtest testgame main

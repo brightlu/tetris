@@ -35,5 +35,9 @@ void draw_piece(piece *p, pi_framebuffer_t *dev);
 void delay(int time);
 void rotate(piece *p, int data_x);
 int isBelow(int x, int y, pixel *top);
-int checkOpen(piece *pi, pixel *lop);
+int isLeftTo(int x, int y, pixel *top);
+int isRightTo(int x, int y, pixel *top);
+int checkOpenLeftTo(piece *pi, pixel *lop);
+int checkOpenRightTo(piece *pi, pixel *lop);
+int checkOpenBelow(piece *pi, pixel *lop);
 

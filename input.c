@@ -123,18 +123,34 @@ piece *move_piece_right(piece *pi){
 }
 
 piece *move_piece_left(piece *pi){
-        if (pi->ypos == 0) {
+        if (pi->ypos <= 0) {
 	  return pi;
-	} else if ((pi->ypos >= 1) && ((pi->rotate == 0) || (pi->rotate == 2)) && (pi->type == 3)) {
+	} else if ((pi->ypos <= 1) && ((pi->rotate == 0) || (pi->rotate == 2)) && (pi->type == 3)) {
           return pi;
-        } else if ((pi->ypos >= 1) && ((pi->rotate == 2) || (pi->rotate == 3)) && (pi->type == 4)) {
+        } else if ((pi->ypos <= 1) && ((pi->rotate == 2) || (pi->rotate == 3)) && (pi->type == 4)) {
           return pi;
-        } else if ((pi->ypos >= 1) && (pi->rotate != 1) && (pi->type == 5)) {
+        } else if ((pi->ypos <= 1) && (pi->rotate != 1) && (pi->type == 5)) {
           return pi;
         } else {
           pi->ypos = pi->ypos - 1;
           return pi;
         }
+}
+
+void rotate(piece *p, int data_x) {
+  if (data_x < -30) {
+    if (p->rotate == 3) {
+      p->rotate = 0;
+    } else {
+      p->rotate = p->rotate + 1;
+    }
+  } else if (data_x > 30) {
+    if (p->rotate == 0) {
+      p->rotate = 3;
+    } else {
+      p->rotate = p->rotate - 1;
+    }
+  }
 }
 
 
@@ -143,25 +159,30 @@ void draw_locked_pieces(pi_framebuffer_t *dev, pixel *lop) {
         p = lop;
         while(p != NULL) {
                 if (p->color == 0) {
+			//dot piece, red
                         dev->bitmap->pixel[p->x][p->y] = getColor(255, 0, 0);
                 } else if (p->color == 1) {
+			//two dot piece, green
                         dev->bitmap->pixel[p->x][p->y] = getColor(0, 255, 0);
                 } else if (p->color == 2) {
+			//three dot piece, blue
                         dev->bitmap->pixel[p->x][p->y] = getColor(0, 0, 255);
                 } else if (p->color == 3) {
+			//z piece, yellow
                         dev->bitmap->pixel[p->x][p->y] = getColor(255, 255, 51);
                 } else if (p->color == 4) {
+			//r piece, orange
                         dev->bitmap->pixel[p->x][p->y] = getColor(255, 128, 0);
                 } else {
+			//t piece, purple
                         dev->bitmap->pixel[p->x][p->y] = getColor(255, 0, 255);
                 }
-
                 p = p->next;
         }
 }
 
 void draw_piece(piece *p, pi_framebuffer_t *dev) {
-  clearBitmap(dev->bitmap, 0);
+	clearBitmap(dev->bitmap, 0);
         if (p->type == 0) {
           display_dot(dev, p->xpos, p->ypos);
         } else if (p->type == 1) {
@@ -182,22 +203,6 @@ void delay(int time) {
         }
 }
 
-void rotate(piece *p, int data_x) {
-  if (data_x < -30) {
-    if (p->rotate == 3) {
-      p->rotate = 0;
-    } else {
-      p->rotate = p->rotate + 1;
-    }
-  } else if (data_x > 30) {
-    if (p->rotate == 0) {
-      p->rotate = 3;
-    } else {
-      p->rotate = p->rotate - 1;
-    }
-  }
-}
-
 int isBelow(int x, int y, pixel *top) {
         pixel *p;
         p = top;
@@ -211,28 +216,141 @@ int isBelow(int x, int y, pixel *top) {
         return 0;
 }
 
-int checkOpen(piece *pi, pixel *lop) {
+int isLeftTo(int x, int y, pixel *top) {
+	pixel *p;
+	p = top;
+	while(p != NULL){
+		if ((y - 1 == p->y) && (x == p->x)) {
+			return 1;
+		}
+		p = p->next;
+	}
+	return 0;
+}
+
+int isRightTo(int x, int y, pixel *top) {
+	pixel *p;
+	p = top;
+	while(p != NULL){
+		if ((y + 1 == p->y) && (x == p->x)) {
+			return 1;
+		}
+		p = p->next;
+	}
+	return 0;
+}
+
+int checkOpenLeftTo(piece *pi, pixel *lop) {
+	if (pi->type == 0) {
+		return isLeftTo(pi->xpos, pi->ypos, lop);
+	} else if (pi->type == 1) {
+		if (pi->rotate == 0 || pi->rotate == 2) {
+			return isLeftTo(pi->xpos, pi->ypos, lop);
+		} else {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop);
+		}
+	} else if (pi->type == 2) {
+		if (pi->rotate == 0 || pi->rotate == 2) {
+			return isLeftTo(pi->xpos, pi->ypos, lop);
+		} else {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop) + isLeftTo(pi->xpos -2, pi->ypos, lop);
+		}
+	} else if (pi->type == 3) {
+		if (pi->rotate == 0 || pi->rotate == 2) {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos - 1, lop);
+		} else {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop) + isLeftTo(pi->xpos - 2, pi->ypos + 1, lop);
+		}
+	} else if (pi->type == 4) {
+		if (pi->rotate == 0 || pi->rotate == 1) {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop);
+		} else if (pi->rotate == 2) {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos - 1, lop);
+		} else {
+			return isLeftTo(pi->xpos, pi->ypos - 1, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop);
+		}
+	} else if (pi->type == 5) {
+		if (pi->rotate == 0) {
+			return isLeftTo(pi->xpos, pi->ypos - 1, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop);
+		} else if (pi->rotate == 1) {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop) + isLeftTo(pi->xpos - 2, pi->ypos, lop);
+		} else if (pi->rotate == 2) {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos - 1, lop);
+		} else if (pi->rotate == 3) {
+			return isLeftTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos - 1, lop) + isLeftTo(pi->xpos - 2, pi->ypos, lop);
+                }
+	}
+}
+
+int checkOpenRightTo(piece *pi, pixel *lop) {
         if (pi->type == 0) {
+                return isRightTo(pi->xpos, pi->ypos, lop);
+        } else if (pi->type == 1) {
+                if (pi->rotate == 0 || pi->rotate == 2) {
+                        return isRightTo(pi->xpos, pi->ypos + 1, lop);
+                } else {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos - 1, pi->ypos, lop);
+                }
+        } else if (pi->type == 2) {
+                if (pi->rotate == 0 || pi->rotate == 2) {
+                        return isRightTo(pi->xpos, pi->ypos + 2, lop);
+                } else {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos - 1, pi->ypos, lop) + isRightTo(pi->xpos -2, pi->ypos, lop);
+                }
+        } else if (pi->type == 3) {
+                if (pi->rotate == 0 || pi->rotate == 2) {
+                        return isRightTo(pi->xpos, pi->ypos + 1, lop) + isRightTo(pi->xpos - 1, pi->ypos, lop);
+                } else {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos - 1, pi->ypos + 1, lop) + isRightTo(pi->xpos - 2, pi->ypos + 1, lop);
+                }
+        } else if (pi->type == 4) {
+                if (pi->rotate == 0) {
+                        return isRightTo(pi->xpos, pi->ypos + 1, lop) + isRightTo(pi->xpos - 1, pi->ypos, lop);
+                } else if (pi->rotate == 1) {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos - 1, pi->ypos + 1, lop);
+                } else {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos, pi->ypos - 1, lop);
+                }
+        } else if (pi->type == 5) {
+                if (pi->rotate == 0) {
+                        return isRightTo(pi->xpos, pi->ypos + 1, lop) + isRightTo(pi->xpos - 1, pi->ypos, lop);
+                } else if (pi->rotate == 1) {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos - 1, pi->ypos + 1, lop) + isRightTo(pi->xpos - 2, pi->ypos, lop);
+                } else if (pi->rotate == 2) {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isRightTo(pi->xpos - 1, pi->ypos + 1, lop);
+                } else if (pi->rotate == 3) {
+                        return isRightTo(pi->xpos, pi->ypos, lop) + isLeftTo(pi->xpos - 1, pi->ypos, lop) + isLeftTo(pi->xpos - 2, pi->ypos, lop);
+                }
+        }
+}
+
+int checkOpenBelow(piece *pi, pixel *lop) {
+        if (pi->type == 0) {
+		//single dot piece
                 return isBelow(pi->xpos, pi->ypos, lop);
         } else if (pi->type == 1) {
+		//two dot piece
                 if (pi->rotate == 0 || pi->rotate == 2) {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop);
                 } else {
                         return isBelow(pi->xpos, pi->ypos, lop);
                 }
         } else if (pi->type == 2) {
+		//three dot piece
                 if (pi->rotate == 0 || pi->rotate == 2) {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop) + isBelow(pi->xpos, pi->ypos + 2, lop);
                 } else {
                         return isBelow(pi->xpos, pi->ypos, lop);
                 }
         } else if (pi->type == 3) {
+		//z piece
                 if (pi->rotate == 0 || pi->rotate == 2) {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop) + isBelow(pi->xpos - 1, pi->ypos - 1, lop);
                 } else {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos - 1, pi->ypos + 1, lop);
                 }
         } else if (pi->type == 4) {
+		//r piece
                 if (pi->rotate == 0) {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop);
                 } else if (pi->rotate == 1) {
@@ -243,6 +361,7 @@ int checkOpen(piece *pi, pixel *lop) {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos - 1, lop);
                 }
         } else {
+		//t piece
                 if (pi->rotate == 0) {
                         return isBelow(pi->xpos, pi->ypos, lop) + isBelow(pi->xpos, pi->ypos + 1, lop) + isBelow(pi->xpos, pi->ypos - 1, lop);
                 } else if (pi->rotate == 1) {
