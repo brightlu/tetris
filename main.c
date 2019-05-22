@@ -1,12 +1,4 @@
-#include "sense.h"
-#include <string.h>
-#include <stdlib.h>
 #include "project.h"
-//#include "piece.h"
-//#include "outputtest.h"
-#include <stdio.h>
-#include <time.h>
-#include <linux/input.h>
 
 int running=1;
 pi_i2c_t* gyro=NULL;
@@ -141,4 +133,5 @@ int main(void) {
 
 	destroy_lop(&lp);
 	printf("You cleared %d rows!", score);
+	
 }

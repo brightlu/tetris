@@ -1,3 +1,8 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <linux/input.h>
 #include "sense.h"
 
 typedef struct Piece {
@@ -42,5 +47,6 @@ int checkOpenRightTo(piece *pi, pixel *lop);
 int checkOpenBelow(piece *pi, pixel *lop);
 pixel *move_pixel_down(pixel *lop, int xpos);
 pixel *clearRow(pixel **lop, int xpos);
-void checkFullRows(pixel *lp);
+int checkFullRows(pixel *lp);
 int count(pixel *head, int search_x);
+void destroy_lop(pixel **lop);
