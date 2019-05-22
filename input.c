@@ -23,23 +23,25 @@ void destroy_lop(pixel **p) {
     *p = NULL;
 }
 
-int count(pixel *head, int search_x)
-{
+int count(pixel *head, int search_x) {
     pixel *current = head;
     int count = 0;
     while (current != NULL) {
-        if (current->x == search_x)
+        if (current->x == search_x) {
             count++;
-        current = current->next;
-    }
+	}
+	printf("x: %i y: %i count: %i\n", search_x, current->y, count);
+    		current = current->next;
+	}
     return count;
 }
 
 pixel *move_pixel_down(pixel *lop, int xpos) {
+	printf("ohgoddddddd\n");
 	pixel *p;
         p = lop;
         while(p->next != NULL) {
-                if (p->x < xpos) {
+                if (p->x < xpos && (xpos != 7)) {
                         p->x = p->x + 1;
                 }
                 p = p->next;
@@ -47,9 +49,81 @@ pixel *move_pixel_down(pixel *lop, int xpos) {
 
 	return p;
 }
+/*
+void clearRow(pixel **lop, int xpos) {
+	if ((*lop)->next->x == xpos) {
+		pixel *temp = *lop;
+		*lop = (*lop)->next;
+		free(temp);
+	}
+	pixel *current = (*lop)->next;
+	pixel *prev = *lop;
+	while (current != NULL && prev != NULL) {
+		if (current->x == xpos) {
+			pixel *temp = current;
+			prev->next = current->next;
+			free(temp);
+		}
+		prev = current;
+		current = current->next;
+	}
+	return;
+}
 
-pixel *clearRow(pixel **lop, int xpos) {
+
+void clearRow(pixel **lop, int xpos) {
 	pixel *p = *lop;
+	if (p == NULL) {
+		return;
+	}
+	if (p->x == xpos) {
+		p = p->next;
+		return;
+	}
+
+	pixel *current = p;
+	pixel *prev;
+	while(current->next != NULL) {
+		prev = current;
+		if(current->x == xpos) {
+                	prev->next = prev->next->next;
+                	free(current);
+		}
+		current = current->next;
+	}
+}
+
+*/
+void clearRow(pixel *lop, int xpos) {
+	pixel **p = &lop;
+	while(*p) {
+		if((*p)->x == xpos) {
+			pixel *temp = (*p)->next;
+			free(*p);
+			*p = temp;
+		} else {
+			p = &(*p)->next;
+		}
+	}
+	pixel *rest = (*p)->next;
+	free(p);
+	*p = rest;
+}
+
+pixel *removeFirstPixel(pixel *lop) {
+	if (lop == NULL) {
+		return NULL;
+	}
+
+	pixel *temp = lop;
+	lop = lop->next;
+	free(temp);
+	return lop;
+}
+
+/*
+pixel *clearRow(pixel *lop, int xpos) {
+	pixel *p = lop;
 
 	if (p->x == xpos) {
 		pixel *next;
@@ -71,12 +145,15 @@ pixel *clearRow(pixel **lop, int xpos) {
 
 	return p;
 }
-
+*/
 int checkFullRows(pixel *lp) {
 	for (int i = 7; i >= 0; i--) {
 		if (count(lp, i) == 8) {
-			lp = clearRow(&lp, i);
-			lp = move_pixel_down(lp, i);
+			printf("count\n");
+			clearRow(lp, i);
+//			lp = removeFirstPixel(lp);
+			printf("count: %i\n", count(lp, 0));
+//			lp = move_pixel_down(lp, i);
 			return 1;
 		}
 	}

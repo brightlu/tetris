@@ -6,6 +6,8 @@ LDFLAGS := -L ~/lib -lsense -lm
 
 inputtest: inputtest.o
 	cc -o inputtest $(INCLUDE) inputtest.o $(LDFLAGS)
+outputtest: outputtest.o
+	cc -o outputtest $(INCLUDE) outputtest.o $(LDFLAGS)
 
 testgame: testgame.o
 	cc outputtest.c piece.c -o testgame $(INCLUDE) testgame.o $(LDFLAGS)
