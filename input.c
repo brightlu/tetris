@@ -60,11 +60,10 @@ pixel *clearRow(pixel **lop, int xpos) {
 
 
         while(p->next != NULL) {
-		pixel *next = p->next->next;
-                if (p->next->x == xpos) {
-			p->next = NULL;
-                        free(p->next);
-			p->next = next;
+		pixel *next = p->next;
+                if (p->x == xpos) {
+                        free(p);
+			p = next;
     		} else {
 			p = p->next;
 		}
